@@ -3,6 +3,7 @@ package com.relewant.webinar.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.relewant.webinar.models.UserJsonDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
@@ -17,20 +18,14 @@ public class UsersService {
     
     private static final String FILE_PATH = "src/main/resources/";
     private static final String FILE_NAME = "users.json";
+
+    @Autowired
+    private ObjectMapper objectMapper;
     
     public Resource buildExcel() throws IOException {
         
-        ObjectMapper  objectMapper = getObjectMapper();
         UserJsonDto userJsonDto = objectMapper.readValue(new File(FILE_PATH + FILE_NAME), UserJsonDto.class);
+        log.info("users: {}", userJsonDto);
         return null;
-    }
-    
-    private ObjectMapper getObjectMapper(){
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-        context.scan("com.relewant.webinar.configuration");
-        context.refresh();
-
-        ObjectMapper objectMapper = context.getBean(ObjectMapper.class);
-        return objectMapper;
     }
 }
