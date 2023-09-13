@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UsersController {
-
+    
+    
     @GetMapping("/users")
     @ResponseBody
     public ResponseEntity<Resource> serveFile() {
