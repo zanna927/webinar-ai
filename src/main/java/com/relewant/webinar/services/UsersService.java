@@ -16,12 +16,12 @@ import java.io.IOException;
 public class UsersService {
     
     private static final String FILE_PATH = "src/main/resources/";
-    private static final String FILE_NAME = "user.json";
+    private static final String FILE_NAME = "users.json";
     
     public Resource buildExcel() throws IOException {
         
         ObjectMapper  objectMapper = getObjectMapper();
-        objectMapper.readValue(new File(FILE_PATH + FILE_NAME), UserJsonDto.class);
+        UserJsonDto userJsonDto = objectMapper.readValue(new File(FILE_PATH + FILE_NAME), UserJsonDto.class);
         return null;
     }
     

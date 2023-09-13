@@ -1,14 +1,14 @@
 package com.relewant.webinar.models;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
 @Data
 @ToString
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserJsonDto {
     
     private List<UserDto> users;
