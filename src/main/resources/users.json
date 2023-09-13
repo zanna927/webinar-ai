@@ -1,0 +1,14 @@
+{
+  "users": [
+    {
+      "first_name": "Luca",
+      "last_name": "Fantini",
+      "birthday": "05/03/1988"
+    },
+    {
+      "first_name": "Simone",
+      "last_name": "Zanetti",
+      "birthday": "29/02/2008"
+    }
+  ]
+}
