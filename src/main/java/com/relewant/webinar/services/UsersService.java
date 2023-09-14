@@ -23,6 +23,7 @@ public class UsersService {
     
     private static final String FILE_PATH = "src/main/resources/";
     private static final String FILE_NAME = "users.json";
+    private static final String EXPORT_FILE_NAME = "users.xlsx";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -37,14 +38,15 @@ public class UsersService {
 
         int rowCount = 0;
         rowCount = createHeader(sheet, rowCount);
-
+        
         for(UserDto user : userJsonDto.getUsers()){
             rowCount = generateRow(sheet, rowCount, user.getFirstName(), user.getLastName(), user.getBirthday());
         }
-        try (FileOutputStream outputStream = new FileOutputStream(FILE_PATH + "users.xlsx")) {
+        
+        try (FileOutputStream outputStream = new FileOutputStream(FILE_PATH + EXPORT_FILE_NAME)) {
             workbook.write(outputStream);
         }
-        log.info("file excel generato");
+        log.debug("file excel generato");
         return null;
     }
 
