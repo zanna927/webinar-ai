@@ -8,29 +8,30 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 @Service
 @Slf4j
 public class UsersService {
-    
+
     private static final String FILE_PATH = "src/main/resources/";
     private static final String FILE_NAME = "users.json";
     private static final String EXPORT_FILE_NAME = "users.xlsx";
 
     @Autowired
     private ObjectMapper objectMapper;
-    
-    public Resource buildExcel() throws IOException {
-        
-        UserJsonDto userJsonDto = objectMapper.readValue(new File(FILE_PATH + FILE_NAME), UserJsonDto.class);
+
+    @Autowired
+    private ResourceLoader resourceLoader;
+
+    public byte[] buildExcel() throws IOException {
+        Resource resource = resourceLoader.getResource("classpath:" + FILE_NAME);
+        UserJsonDto userJsonDto = objectMapper.readValue(resource.getFile(), UserJsonDto.class);
         log.info("users: {}", userJsonDto);
 
         XSSFWorkbook workbook = new XSSFWorkbook();
@@ -38,16 +39,27 @@ public class UsersService {
 
         int rowCount = 0;
         rowCount = createHeader(sheet, rowCount);
-        
-        for(UserDto user : userJsonDto.getUsers()){
+
+        for (UserDto user : userJsonDto.getUsers()) {
             rowCount = generateRow(sheet, rowCount, user.getFirstName(), user.getLastName(), user.getBirthday());
         }
-        
+
         try (FileOutputStream outputStream = new FileOutputStream(FILE_PATH + EXPORT_FILE_NAME)) {
             workbook.write(outputStream);
         }
         log.debug("file excel generato");
-        return null;
+
+        Resource resourceOutput = resourceLoader.getResource("classpath:"  + EXPORT_FILE_NAME);
+
+        byte[] content = new byte[]{};
+
+        if (resourceOutput.exists()) {
+            try (InputStream inputStream = resourceOutput.getInputStream()) {
+                content = FileCopyUtils.copyToByteArray(inputStream);
+            }
+        }
+
+        return content;
     }
 
     private static int generateRow(XSSFSheet sheet, int rowCount, String field1, String field2, String field3) {
