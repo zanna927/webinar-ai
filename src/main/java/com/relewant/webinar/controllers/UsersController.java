@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
-@RestController
+@RestController("/users")
 @Slf4j
 public class UsersController {
 
     @Autowired
     private UsersService usersService;
 
-    @GetMapping("/users")
+    @GetMapping("/old")
     @ResponseBody
     public ResponseEntity<byte[]> serveFile() throws IOException {
         byte[] content = usersService.buildExcel();
